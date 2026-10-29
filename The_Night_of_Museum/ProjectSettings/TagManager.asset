@@ -14,7 +14,7 @@ TagManager:
   - Floor
   - Player
   - Enemy
-  - Minimap Wall
+  - Minimap
   - Collection
   - Interaction UI
   - 
