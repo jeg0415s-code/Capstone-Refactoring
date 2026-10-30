@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     // namespaces
     readonly PlayerControl Control = new PlayerControl();
+    readonly PlayerInteraction Interaction = new PlayerInteraction();
 
     #region Variables
     [Header("Movement Settings")]
@@ -25,8 +26,14 @@ public class PlayerController : MonoBehaviour
     [Tooltip("플레이어 시아 높이")]
     [SerializeField] private float eyeHeight = 2f;
 
+    [Header("Interaction Settings")]
+    [Tooltip("상호작용 가능 범위")]
+    [SerializeField] private float interactionRange = 6f;
+
     // bool 변수
     private bool canMove = true;
+    private bool isExhausted = false;
+    
     private bool isMoving = false;
     private bool isSprinting = false;
 
@@ -48,11 +55,13 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         PlayerEvent.MovementEnabledChanged += OnMovementEnabledChanged;
+        PlayerEvent.ExhaustedChanged += OnExhaustedChanged;
     }
 
     private void OnDisable()
     {
         PlayerEvent.MovementEnabledChanged -= OnMovementEnabledChanged;
+        PlayerEvent.ExhaustedChanged -= OnExhaustedChanged;
     }
 
     private void Start()
@@ -79,13 +88,17 @@ public class PlayerController : MonoBehaviour
 
     #region Functions
     private void OnMovementEnabledChanged(bool enabled) => canMove = enabled;
+    private void OnExhaustedChanged(bool enabled) => isExhausted = enabled;
 
     private void HandleMovement()
     {
-        isSprinting = GameplayInput.SprintHeld;
+        if (!isExhausted) isSprinting = GameplayInput.SprintHeld;
+        else isSprinting = false;
+
         var vertical = GameplayInput.VerticalInput;
         var horizontal = GameplayInput.HorizontalInput;
         isMoving = vertical != 0f || horizontal != 0f;
+        PlayerEvent.SetIsMovingNow(isMoving);
 
         var curSpeed = isSprinting ? sprintSpeed : moveSpeed;
         Control.Movement(canMove, isMoving, GameplayInput.VerticalInput, GameplayInput.HorizontalInput, curSpeed);
@@ -100,6 +113,11 @@ public class PlayerController : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -maxXLook, minXLook);
         camera.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
+    }
+
+    private void HandleInteraction()
+    {
+
     }
     #endregion
 }
