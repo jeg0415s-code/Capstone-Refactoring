@@ -47,7 +47,6 @@ public class Player : MonoBehaviour, PlayerPawn
         GameplayEvent.GamePause -= OnGamePause;
         PlayerEvent.IsMovingNow -= OnIsMovingNow;
         PlayerEvent.ExhaustedChanged -= OnExhaustedChanged;
-
     }
 
     private void Start()

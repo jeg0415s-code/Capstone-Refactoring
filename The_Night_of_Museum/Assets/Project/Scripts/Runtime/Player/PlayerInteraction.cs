@@ -62,7 +62,7 @@ namespace Runtime.Player
             // 상호작용 키를 눌렀을 때 실행
             if (closest != null && isInteract)
             {
-                Debug.Log(closest.gameObject.name);
+                closest.HandleInteraction();
             }
         }
 
