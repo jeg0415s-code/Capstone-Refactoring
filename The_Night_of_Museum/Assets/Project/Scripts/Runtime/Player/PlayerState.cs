@@ -5,22 +5,22 @@ namespace Runtime.Player
 {
     public class PlayerState
     {
-        public float Battery;
-        public float MaxBattery;
-        public float Stamina;
-        public float MaxStamina;
+        public float Battery; // 플레이어 배터리 양
+        public float MaxBattery; // 최대 배터리 양
+        public float Stamina; // 플레이어 스테미나 양
+        public float MaxStamina; // 최대 스테미나 양
 
-        public float UseBatteryPerSec;
-        public float UseStaminaPerSec;
-        public float ChargeStaminaPerSec;
+        public float UseBatteryPerSec; // 초당 배터리 사용량
+        public float UseStaminaPerSec; // 초당 스테미나 사용량
+        public float ChargeStaminaPerSec; // 초당 스테미나 충전량
 
-        private bool IsExhausted;
-        public bool IsNoBattery;
+        private bool IsExhausted; // 플레이어가 지쳤는지
+        public bool IsNoBattery; // 플레이어 배터리가 다 떨어졌는지
 
-        public float BatteryRatio => MaxBattery > 0f ? Battery / MaxBattery : 0f;
-        public float StaminaRatio => MaxStamina > 0f ? Stamina / MaxStamina : 0f;
+        public float BatteryRatio => MaxBattery > 0f ? Battery / MaxBattery : 0f; // UI용 배터리 양
+        public float StaminaRatio => MaxStamina > 0f ? Stamina / MaxStamina : 0f; // UI용 스테미나 양
 
-        public event Action BatteryDepleted;
+        public event Action BatteryDepleted; // 배터리가 다 닳았을 때의 이벤트
 
         /// <summary>
         /// 배터리/스테미나 등의 변수값 초기화
@@ -59,6 +59,7 @@ namespace Runtime.Player
                 return;
             }
 
+            // 배터리가 0이하면 실행
             BatteryDepletion();
         }
 
@@ -70,6 +71,7 @@ namespace Runtime.Player
         {
             if (IsNoBattery) return;
 
+            // amount값 만큼 배터리 충전
             Battery = Mathf.Min(Battery + amount, MaxBattery);
 
             float currentRatio = BatteryRatio;
@@ -83,9 +85,11 @@ namespace Runtime.Player
         {
             if (Stamina <= 0f && IsExhausted) return;
 
+            // 스테미나 사용
             Stamina -= UseStaminaPerSec * deltaTime;
             if (Stamina > 0f) return;
 
+            // 스테미나가 다 닳으면 지침 상태 돌입
             Stamina = 0f;
             IsExhausted = true;
             PlayerEvent.SetExhausted(true);
@@ -97,7 +101,9 @@ namespace Runtime.Player
         /// </summary>
         public void ChargeStamina(float deltaTime)
         {
+            // 자동 스테미나 충전
             Stamina = Mathf.Min(Stamina + (ChargeStaminaPerSec * deltaTime), MaxStamina);
+            // 플레이어가 지침 상태이고, 스테미나 양이 30프로 이상 차면 지침 상태 취소
             if (IsExhausted && Stamina >= MaxStamina * 0.3f)
             {
                 IsExhausted = false;
@@ -105,6 +111,7 @@ namespace Runtime.Player
             }
         }
 
+        // 플레이어 배터리 고갈 상태
         private void BatteryDepletion()
         {
             Battery = 0f;

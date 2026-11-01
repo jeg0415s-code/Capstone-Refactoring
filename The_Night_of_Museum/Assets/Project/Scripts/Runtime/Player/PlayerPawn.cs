@@ -4,6 +4,6 @@ namespace Runtime.Player
 {
     public interface PlayerPawn
     {
-        Transform Transform { get; }
+        Transform Transform { get; } // 플레이어의 transform
     }
 }

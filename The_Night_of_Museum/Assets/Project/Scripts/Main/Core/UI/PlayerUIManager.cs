@@ -30,15 +30,15 @@ public class PlayerUIManager : MonoBehaviour
 
     private void Start()
     {
+        // 플레이어 오브젝트 찾기
         State = FindFirstObjectByType<Player>().State;
         if (State == null) State = new PlayerState();
 
-        if (staminaBarSlider != null) 
-        {
-            staminaBarGroup = staminaBarSlider.gameObject.GetComponent<CanvasGroup>();
-        }
-        else { return; }
+        // 스테미나 바의 CanvasGroup 컴포넌트 받아오기
+        if (staminaBarSlider != null) staminaBarGroup = staminaBarSlider.gameObject.GetComponent<CanvasGroup>();
+        else return;
 
+        // 스테미나 바 안보이게 설정
         staminaBarGroupAlpha = 0f;
         staminaBarGroup.alpha = staminaBarGroupAlpha;
     }
@@ -51,6 +51,7 @@ public class PlayerUIManager : MonoBehaviour
     #region Functions
     private void HandleSliders()
     {
+        // hp/stamina 바 값 변경
         batteryBarSlider.value = State.BatteryRatio;
         HandleStaminaBar(State.StaminaRatio);
     }
@@ -59,6 +60,7 @@ public class PlayerUIManager : MonoBehaviour
     {
         if (staminaBarSlider == null || staminaFill == null) return;
 
+        // 스테미나 바의 값이 변경되거나, 1이 되면 자연스럽게 FadeInOut되기
         var target = State.StaminaRatio < 1f ? 1f : 0f;
         if (staminaBarGroup != null)
             staminaBarGroup.alpha = Mathf.MoveTowards(staminaBarGroup.alpha, target, staminaBarFadeSpeed * Time.deltaTime);
@@ -66,6 +68,7 @@ public class PlayerUIManager : MonoBehaviour
         float clampValue = Mathf.InverseLerp(staminaBarSlider.minValue, staminaBarSlider.maxValue, value); // 0~1로 정규화
         float halfValue = clampValue * 0.5f;
 
+        // 스테미나 바의 Fill 이미지가 중앙으로 줄어들게 만들기
         staminaFill.anchorMin = new Vector2(0.5f - halfValue, staminaFill.anchorMin.y);
         staminaFill.anchorMax = new Vector2(0.5f + halfValue, staminaFill.anchorMax.y);
         staminaFill.offsetMin = new Vector2(0, staminaFill.offsetMin.y);

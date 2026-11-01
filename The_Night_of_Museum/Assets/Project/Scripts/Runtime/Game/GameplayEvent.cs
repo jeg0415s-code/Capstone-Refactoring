@@ -9,6 +9,8 @@ namespace Runtime.Gameplay
     {
         public static event Action<bool> GamePause; // 게임 일시정지 이벤트
 
+        //--------------------------------------------------------------------------------//
+
         public static void SetGamePause(bool enabled) => GamePause?.Invoke(enabled);
     }
 }
