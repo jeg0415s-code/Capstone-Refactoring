@@ -36,5 +36,37 @@ namespace Runtime.Interaction
             if (type == CollectionData.CollectionType.Real) Debug.Log("콜렉션 상호작용");
             else Debug.Log("가짜 콜렉션 상호작용");
         }
+
+        /// <summary>
+        /// 캐비넷 상호작용
+        /// </summary>
+        public void HandleCabient()
+        {
+
+        }
+
+        /// <summary>
+        /// 금고 상호작용
+        /// </summary>
+        public void HandleSafe()
+        {
+
+        }
+
+        /// <summary>
+        /// 석상 상호작용
+        /// </summary>
+        public void HandleStatue()
+        {
+
+        }
+
+        /// <summary>
+        /// 출구 상호작용
+        /// </summary>
+        public void HandleExitDoor()
+        {
+
+        }
     }
 }

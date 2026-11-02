@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 using Runtime.Interaction;
 using Runtime.Player;
@@ -20,6 +21,10 @@ public class InteractionManager : MonoBehaviour
     readonly InteractionControl Control = new InteractionControl();
     private PlayerState PlayerStates;
 
+    // 현재 활성화된 상호작용 오브젝트 목록
+    private static readonly List<InteractionManager> instances = new List<InteractionManager>();
+    public static IReadOnlyList<InteractionManager> Instances => instances;
+
     #region Variables
     [Header("Object Type")]
     [Tooltip("오브젝트의 상호작용 타입")]
@@ -32,10 +37,15 @@ public class InteractionManager : MonoBehaviour
     [Header("Interaction Data")]
     [SerializeField] private BatteryData batteryData = new BatteryData();
     [SerializeField] private CollectionData collectionData = new CollectionData();
+    [SerializeField] private CabinetData cabinetData = new CabinetData();
 
     public BatteryData Battery => batteryData;
     public CollectionData Collection => collectionData;
+    public CabinetData Cabient => cabinetData;
     #endregion
+
+    private void OnEnable() => instances.Add(this); // 활성화된 상호작용 오브젝트 목록에 등록
+    private void OnDisable() => instances.Remove(this); // 활성화된 상호작용 오브젝트 목록에서 제외
 
     private void Start()
     {

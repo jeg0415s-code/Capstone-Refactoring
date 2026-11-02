@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     // namespaces
     readonly PlayerControl Control = new PlayerControl();
+    readonly PlayerHeadBob HeadBob = new PlayerHeadBob();
     readonly PlayerInteraction Interaction = new PlayerInteraction();
 
     #region Variables
@@ -31,9 +32,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float interactionRange = 6f;
     [Tooltip("상호작용 가능 시야각")]
     [SerializeField, Range(1f, 180f)] private float viewAngle = 60f;
-    [Tooltip("상호작용 가능 오브젝트 레이어")]
-    [SerializeField] private LayerMask interactableLayer;
-    [Tooltip("시야를 가리는 레이어")]
+    [Tooltip("상호작용을 막는 벽 오브젝트 레이어")]
     [SerializeField] private LayerMask obstacleLayer;
 
     // bool 변수
@@ -46,6 +45,7 @@ public class PlayerController : MonoBehaviour
     // 컴포넌트
     private Rigidbody rb = null;
     private Transform camera = null;
+    private AudioSource audio = null;
 
     // 카메라 private 변수
     private float xRotation = 0f;
@@ -76,6 +76,9 @@ public class PlayerController : MonoBehaviour
     {
         if (Camera.main != null) { camera = Camera.main.transform; }
         else { Debug.LogError("Main camera is null!"); return; }
+
+        if (audio == null) { audio = GetComponent<AudioSource>(); }
+        else { Debug.LogError("Player audio source is null!"); }
 
         // PlayerControl에 값 할당
         Control.Bind(rb, camera);
@@ -118,6 +121,8 @@ public class PlayerController : MonoBehaviour
         // 이동
         var curSpeed = isSprinting ? sprintSpeed : moveSpeed;
         Control.Movement(canMove, isMoving, GameplayInput.VerticalInput, GameplayInput.HorizontalInput, curSpeed);
+        HeadBob.HandleHeadBobbing(camera, isMoving, eyeHeight, curSpeed, Time.deltaTime);
+
     }
 
     private void HandleCamera()
@@ -141,7 +146,6 @@ public class PlayerController : MonoBehaviour
             camera,
             viewAngle,
             interactionRange,
-            interactableLayer,
             obstacleLayer,
             GameplayInput.InteractDown);
     }

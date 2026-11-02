@@ -13,7 +13,6 @@ namespace Runtime.Player
         /// <param name="view"> 카메라 Transform
         /// <param name="viewAngle"> 시야각
         /// <param name="interactionRange"> 상호작용 가능 범위
-        /// <param name="interactableLayer"> 상호작용 가능 오브젝트 레이어
         /// <param name="obstacleLayer"> 상호작용을 막을 벽 오브젝트 레이어
         /// <param name="isInteract"> 상호작용 키를 눌렀는지
         /// </summary>
@@ -22,32 +21,25 @@ namespace Runtime.Player
             Transform view,
             float viewAngle,
             float interactionRange,
-            LayerMask interactableLayer,
             LayerMask obstacleLayer,
             bool isInteract)
         {
-            // InteractionManager 스크립트를 가진 오브젝트들 찾기
-            var count = Physics.OverlapSphereNonAlloc(
-                player.position,
-                interactionRange,
-                hits, interactableLayer,
-                QueryTriggerInteraction.Collide);
-
             InteractionManager closest = null;
             var closestObjSqr = float.MaxValue;
+            var rangeSqr = interactionRange * interactionRange;
 
-            // 플레이어 시아 안에 들어오고, 플레이어와 가장 가까이 있는 상호작용 오브젝트 고르기
-            for (var i = 0; i < count; i++)
+            // 플레이어 시야 안에 들어오고, 플레이어와 가장 가까이 있는 상호작용 오브젝트 고르기
+            var interactables = InteractionManager.Instances;
+            for (var i = 0; i < interactables.Count; i++)
             {
-                if (!hits[i].TryGetComponent(out InteractionManager interactable)) continue;
-                if (!IsInView(view, hits[i], viewAngle, obstacleLayer)) continue;
+                var interactable = interactables[i];
 
                 var sqr = (interactable.transform.position - player.position).sqrMagnitude;
-                if (sqr < closestObjSqr)
-                {
-                    closestObjSqr = sqr;
-                    closest = interactable;
-                }
+                if (sqr > rangeSqr || sqr >= closestObjSqr) continue;
+                if (!IsInView(view, interactable.transform, viewAngle, obstacleLayer)) continue;
+
+                closestObjSqr = sqr;
+                closest = interactable;
             }
             
             // 상호작용 가능 오브젝트가 변할 때마다 상호작용 UI 활성/비활성화
@@ -73,9 +65,9 @@ namespace Runtime.Player
         /// <param name="viewAngle"> 시야각
         /// <param name="obstacleLayer"> 상호작용을 막을 벽 오브젝트 레이어
         /// </summary>
-        private bool IsInView(Transform view, Collider target, float viewAngle, LayerMask obstacleLayer)
+        private bool IsInView(Transform view, Transform target, float viewAngle, LayerMask obstacleLayer)
         {
-            var targetPos = target.bounds.center;
+            var targetPos = target.position;
             var direction = (targetPos - view.position).normalized;
 
             // 시야각 밖이면 제외

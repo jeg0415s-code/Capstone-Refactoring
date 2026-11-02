@@ -28,6 +28,8 @@ public class CollectionData
 [Serializable]
 public class CabinetData
 {
+    [Tooltip("플레이어가 숨겨지는 캐비넷 위치")]
+    public Transform hidePoint = null;
 }
 
 [Serializable]
