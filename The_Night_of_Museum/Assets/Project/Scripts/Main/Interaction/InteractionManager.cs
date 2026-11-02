@@ -1,5 +1,8 @@
 using UnityEngine;
 
+using Runtime.Interaction;
+using Runtime.Player;
+
 public class InteractionManager : MonoBehaviour
 {
     // 오브젝트의 상호작용 타입 Enum
@@ -12,6 +15,10 @@ public class InteractionManager : MonoBehaviour
         Statue,
         ExitDoor
     }
+
+    // namespace
+    readonly InteractionControl Control = new InteractionControl();
+    private PlayerState PlayerStates;
 
     #region Variables
     [Header("Object Type")]
@@ -34,18 +41,24 @@ public class InteractionManager : MonoBehaviour
     {
         // 상호작용 UI 비활성화
         interactionUI.SetActive(false);
+
+        // 플레이어 오브젝트 찾기
+        PlayerStates = FindFirstObjectByType<Player>().State;
+        if (PlayerStates == null) PlayerStates = new PlayerState();
     }
 
     #region Functions
     public void HandleInteraction()
     {
+        // 오브젝트 타입에 따른 상호작용 기능 다르게 하기
         switch(type)
         {
         case InteractionType.Battery:
-            Debug.Log("배터리 상호작용");
+            Control.HandleBattery(batteryData.chargeAmount, PlayerStates);
+            Destroy(this.gameObject);
             break;
         case InteractionType.Collection:
-            Debug.Log("콜렉션 상호작용");
+            Control.HandleCollection(collectionData.collectionType);
             break;
         case InteractionType.Cabinet:
             Debug.Log("캐비넷 상호작용");

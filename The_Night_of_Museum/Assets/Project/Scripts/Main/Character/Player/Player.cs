@@ -83,9 +83,6 @@ public class Player : MonoBehaviour, PlayerPawn
 
     private void HandleState()
     {
-        State.Battery = battery;
-        State.Stamina = stamina;
-
         // 배터리 자동 사용
         State.UseBattery(Time.deltaTime);
         

@@ -8,7 +8,9 @@ public class InteractionEditor : Editor
         serializedObject.Update();
 
         // 타입별 데이터를 제외한 나머지 필드를 그림
-        DrawPropertiesExcluding(serializedObject, "batteryData", "collectionData");
+        DrawPropertiesExcluding(serializedObject, 
+        "batteryData",
+        "collectionData");
 
         var type = (InteractionManager.InteractionType)serializedObject.FindProperty("type").enumValueIndex;
         var dataName = type switch
