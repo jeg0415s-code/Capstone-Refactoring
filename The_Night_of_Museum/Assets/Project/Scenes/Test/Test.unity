@@ -1655,6 +1655,8 @@ MonoBehaviour:
     chargeAmount: 25
   collectionData:
     collectionType: 0
+  cabinetData:
+    hidePoint: {fileID: 0}
 --- !u!23 &594202091
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3209,6 +3211,8 @@ MonoBehaviour:
     chargeAmount: 25
   collectionData:
     collectionType: 1
+  cabinetData:
+    hidePoint: {fileID: 0}
 --- !u!23 &1701544925
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3735,6 +3739,8 @@ MonoBehaviour:
     chargeAmount: 25
   collectionData:
     collectionType: 0
+  cabinetData:
+    hidePoint: {fileID: 0}
 --- !u!23 &2076442812
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3821,7 +3827,7 @@ GameObject:
   - component: {fileID: 2087829719}
   - component: {fileID: 2087829722}
   m_Layer: 11
-  m_Name: Battery Test
+  m_Name: Battery
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3919,6 +3925,8 @@ MonoBehaviour:
     chargeAmount: 20
   collectionData:
     collectionType: 0
+  cabinetData:
+    hidePoint: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
