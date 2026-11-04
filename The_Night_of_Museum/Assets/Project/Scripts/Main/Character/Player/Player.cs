@@ -3,10 +3,10 @@ using UnityEngine;
 using Runtime.Player;
 using Runtime.Gameplay;
 
-public class Player : MonoBehaviour, PlayerPawn
+public class Player : MonoBehaviour, IPlayerPawn
 {
     // namespaces
-    public PlayerState State { get; } = new PlayerState();
+    readonly PlayerState State = new PlayerState();
 
     #region Variables
     [Header("Battery Settings")]
@@ -31,28 +31,48 @@ public class Player : MonoBehaviour, PlayerPawn
     private bool isExhausted = false;
     private bool isDead = false;
 
+    // private 변수
+    private float maxBattery = 0f;
+    private float maxStamina = 0f;
+    private float batteryRatio = 0f;
+    private float staminaRatio = 0f;
+
     // Player Pawn 할당
-    Transform PlayerPawn.Transform => transform;
+    Transform IPlayerPawn.Transform => transform;
+    bool IPlayerPawn.IsHiding => isHiding;
+    bool IPlayerPawn.IsNoBattery => isNoBattery;
+    bool IPlayerPawn.IsExhausted => isExhausted;
+    bool IPlayerPawn.IsDead => isDead;
+
+    float IPlayerPawn.BatteryRatio => batteryRatio;
+    float IPlayerPawn.StaminaRatio => staminaRatio;
     #endregion
 
     private void OnEnable()
     {
         GameplayEvent.GamePause += OnGamePause;
+
         PlayerEvent.IsMovingNow += OnIsMovingNow;
         PlayerEvent.ExhaustedChanged += OnExhaustedChanged;
+        PlayerEvent.ChargeBattery += OnChargeBattery;
     }
 
     private void OnDisable()
     {
         GameplayEvent.GamePause -= OnGamePause;
+
         PlayerEvent.IsMovingNow -= OnIsMovingNow;
         PlayerEvent.ExhaustedChanged -= OnExhaustedChanged;
+        PlayerEvent.ChargeBattery -= OnChargeBattery;
     }
 
     private void Start()
     {
         // PlayerState 값 초기화
         State.Initialize(battery, stamina, useBatteryPerSec, useStaminaPerSec, chargeStaminaPerSec);
+
+        maxBattery = battery;
+        maxStamina = stamina;
 
         isNoBattery = false;
         isHiding = false;
@@ -90,6 +110,16 @@ public class Player : MonoBehaviour, PlayerPawn
         if (GameplayInput.SprintHeld && isMoving && !isExhausted) { State.UseStamina(Time.deltaTime); }
         else { State.ChargeStamina(Time.deltaTime); }
 
+        SyncStats();
+
+        // UI용 ratio값 반환
+        batteryRatio = maxBattery > 0f ? battery / maxBattery : 0f;
+        staminaRatio = maxStamina > 0f ? stamina / maxStamina : 0f;
+    }
+
+    private void OnChargeBattery(float amount) 
+    {
+        State.ChargeBattery(amount);
         SyncStats();
     }
     #endregion

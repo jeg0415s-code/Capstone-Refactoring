@@ -21,8 +21,18 @@ public class CollectionData
         Fake
     }
 
+    [Header("Type")]
     [Tooltip("콜렉션 타입")]
     public CollectionType collectionType = CollectionType.Real;
+
+    [Header("Obj Settings")]
+    [Space(10)]
+    [Tooltip("상호작용 시 바뀔 오브젝트 레이어 이름")]
+    public string collectionLayerName;
+    [Tooltip("콜렉션 상호작용 시 회전할 오브젝트")]
+    public GameObject collectionObj = null;
+    [Tooltip("상호작용 시 콜렉션이 배치될 위치")]
+    public Vector3 offset = new Vector3(-1.5f, 0f, 1.5f);
 }
 
 [Serializable]

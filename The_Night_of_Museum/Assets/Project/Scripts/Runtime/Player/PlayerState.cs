@@ -17,9 +17,6 @@ namespace Runtime.Player
         private bool IsExhausted; // 플레이어가 지쳤는지
         public bool IsNoBattery; // 플레이어 배터리가 다 떨어졌는지
 
-        public float BatteryRatio => MaxBattery > 0f ? Battery / MaxBattery : 0f; // UI용 배터리 양
-        public float StaminaRatio => MaxStamina > 0f ? Stamina / MaxStamina : 0f; // UI용 스테미나 양
-
         public event Action BatteryDepleted; // 배터리가 다 닳았을 때의 이벤트
 
         /// <summary>
@@ -73,8 +70,6 @@ namespace Runtime.Player
 
             // amount값 만큼 배터리 충전
             Battery = Mathf.Min(Battery + amount, MaxBattery);
-
-            float currentRatio = BatteryRatio;
         }
 
         /// <summary>

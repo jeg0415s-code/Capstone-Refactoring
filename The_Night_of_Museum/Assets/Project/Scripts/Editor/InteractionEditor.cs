@@ -19,6 +19,7 @@ public class InteractionEditor : Editor
             InteractionManager.InteractionType.Battery => "batteryData",
             InteractionManager.InteractionType.Collection => "collectionData",
             InteractionManager.InteractionType.Cabinet => "cabinetData",
+            InteractionManager.InteractionType.Safe => "safeData",
             _ => null
         };
 

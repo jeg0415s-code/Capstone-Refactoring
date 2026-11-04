@@ -21,12 +21,14 @@ namespace Runtime.Player
 
             if (isMoving)
             {
+                // 속도에 따라 강도가 달라지는 카메라 흔들림
                 var amount = speed * 0.01f;
                 bobbingTimer += speed * deltaTime;
 
                 Vector3 local = camera.localPosition;
                 camera.localPosition = new Vector3(local.x, defaultEyeHeight + Mathf.Sin(bobbingTimer) * amount, local.z);
 
+                // 이동 속도에 따른 발자국 소리 재생
                 if (audio != null)
                 {
                     audio.pitch = speed > 10f ? 1.75f : 1f;
@@ -36,9 +38,11 @@ namespace Runtime.Player
                 return;
             }
 
-            bobbingTimer = 0f;
-
+            // 발자국 소리 정지
             if (audio != null) audio.Stop();
+
+            // 카메라 흔들림 정지 후 카메라를 원래 눈높이로 옮기기
+            bobbingTimer = 0f;
 
             Vector3 current = camera.localPosition;
             Vector3 target = new Vector3(current.x, defaultEyeHeight, current.z);

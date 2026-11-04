@@ -89,14 +89,15 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (!canMove) return;
-        HandleMovement();
         HandleInteraction();
+
+        if (!canMove || isGamePause) return;
+        HandleMovement();
     }
 
     private void LateUpdate()
     {
-        if (!canMove) return;
+        if (!canMove || isGamePause) return;
         HandleCamera();
     }
 
@@ -121,8 +122,9 @@ public class PlayerController : MonoBehaviour
         // 이동
         var curSpeed = isSprinting ? sprintSpeed : moveSpeed;
         Control.Movement(canMove, isMoving, GameplayInput.VerticalInput, GameplayInput.HorizontalInput, curSpeed);
-        HeadBob.HandleHeadBobbing(camera, audio, isMoving, eyeHeight, curSpeed, Time.deltaTime);
 
+        // 이동에 따른 카메라 흔들림
+        HeadBob.HandleHeadBobbing(camera, audio, isMoving, eyeHeight, curSpeed, Time.deltaTime);
     }
 
     private void HandleCamera()
