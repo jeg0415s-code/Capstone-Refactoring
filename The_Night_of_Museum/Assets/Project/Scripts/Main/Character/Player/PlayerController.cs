@@ -121,7 +121,7 @@ public class PlayerController : MonoBehaviour
         // 이동
         var curSpeed = isSprinting ? sprintSpeed : moveSpeed;
         Control.Movement(canMove, isMoving, GameplayInput.VerticalInput, GameplayInput.HorizontalInput, curSpeed);
-        HeadBob.HandleHeadBobbing(camera, isMoving, eyeHeight, curSpeed, Time.deltaTime);
+        HeadBob.HandleHeadBobbing(camera, audio, isMoving, eyeHeight, curSpeed, Time.deltaTime);
 
     }
 
